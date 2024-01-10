@@ -1,0 +1,41 @@
+<script setup></script>
+
+<template>
+  <nav class="sidebar">
+    <div>
+      <img src="/logoBatoi.png" class="logo" alt="Vite logo" />
+    </div>
+    <ul>
+      <li><a href="#list">Ver Libros</a></li>
+      <li><a href="#form">Añadir Libro</a></li>
+      <li><a href="#about">Acerca de...</a></li>
+    </ul>
+  </nav>
+</template>
+
+<style scoped>
+.sidebar {
+  /* Establece una posición fija */
+  background-color: #78b5c2;
+  color: #fff;
+  font-size: 20px;
+  text-align: center;
+  padding: 10px;
+  width: 10%;   /* Establece el ancho del menú, a un 20% de la ventana */
+  height: 100%;  /* Establece la altura completa de la ventana */
+  position: fixed; /* Fija el menú en la parte superior */
+  top: 0;
+  left: 0;
+}
+.sidebar a{
+  color: blue;
+}
+.sidebar ul{
+  margin-top: 50%;
+}
+.sidebar li{
+  border: solid white 1px;
+}
+
+
+</style>
