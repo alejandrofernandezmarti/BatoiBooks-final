@@ -8,7 +8,7 @@
 </template>
 <script>
 import BooksRepository from "../repositories/books.repository.js";
-import BookItem from "./BookItem.vue";
+import BookItem from "../components/BookItem.vue";
 import {store} from "@/store/index.js";
 export default {
   data() {

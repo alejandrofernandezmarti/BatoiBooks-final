@@ -1,9 +1,9 @@
 <script>
-import AppAbout from './components/AppAbout.vue'
+import AppAbout from './views/AppAbout.vue'
 import AppMenu from './components/AppMenu.vue'
-import BookForm from './components/BookForm.vue'
-import BookList from './components/BookList.vue';
-import AppCart from './components/AppCart.vue';
+import BookForm from './views/BookForm.vue'
+import BookList from './views/BookList.vue';
+import AppCart from './views/AppCart.vue';
 import AppMessages from './components/AppMessages.vue';
 export default {
   components: {

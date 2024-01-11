@@ -1,4 +1,5 @@
-<script setup></script>
+<script setup>
+</script>
 
 <template>
   <nav class="sidebar">
@@ -6,9 +7,9 @@
       <img src="/logoBatoi.png" class="logo" alt="Vite logo" />
     </div>
     <ul>
-      <li><a href="#list">Ver Libros</a></li>
-      <li><a href="#form">Añadir Libro</a></li>
-      <li><a href="#about">Acerca de...</a></li>
+      <li><router-link to="/">Home</router-link></li>
+      <li><RouterLink to="/addBook">Añadir Libro</RouterLink></li>
+      <li><RouterLink to="/about">Añadir Libro</RouterLink></li>
     </ul>
   </nav>
 </template>

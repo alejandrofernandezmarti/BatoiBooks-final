@@ -1,35 +1,99 @@
 <script>
 import ModulesRepository from '../repositories/modules.repository.js'
 import BooksRepository from "../repositories/books.repository.js";
+import {store} from "@/store/index.js";
 
 export default {
+  props: ['id'],
+
   data() {
     return {
-      book: {},
-      modules: []
+      book: {idModule:''},
+      modules: [],
+      repository: new BooksRepository()
     }
   },
+  computed:{
+    editing() {
+      return !!this.id
+    },
+    formTitle() {
+      return this.editing
+          ? 'Editar libro'
+          : 'Añadir libro'
+    },
+    formButtonTitle() {
+      return this.editing
+          ? 'Editar'
+          : 'Añadir'
+    },
+  },
+
   async mounted() {
-    const ModuleRepository = new ModulesRepository()
-    try {
-      this.modules = await ModuleRepository.getAllModules()
-    } catch (error) {
-      alert(error)
+    await this.loadModules()
+
+    if (this.editing) {
+      await this.loadBook()
+    } else {
+      this.book = { idModule: '' }
     }
+
+
   },
   methods:{
     async addBook(){
       const repository = new BooksRepository();
       await repository.addBook(this.book)
       this.book = {}
+    },
+    async loadModules(){
+      const ModuleRepository = new ModulesRepository()
+      try {
+        this.modules = await ModuleRepository.getAllModules()
+      } catch (error) {
+        alert(error)
+      }
+    },
+
+    async loadBook() {
+      try {
+        this.book = await this.repository.getBookById(this.id)
+      } catch (error) {
+        store.addMessage(error.message)
+      }
+
+    },
+    async handleSubmit() {
+      try {
+        if (this.editing) {
+          await this.repository.changeBook(this.book)
+        } else {
+          await this.repository.addBook(this.book)
+        }
+        this.book = {}
+        this.$router.push('/')
+      } catch (error) {
+        store.addMessage(error.message)
+      }
+
+    },
+    handleReset() {
+      if (this.editing) {
+        this.loadBook()
+      } else {
+        this.book = { idModule: '' }
+      }
     }
+
   }
+
 }
 </script>
 // cambiar id por v-model
 <template>
-  <form id="bookForm" @submit.prevent="addBook" novalidate>
-    <legend class="legend">Añadir libro</legend>
+  <form id="bookForm" @submit.prevent="handleSubmit"
+        @reset.prevent="handleReset" novalidate>
+    <legend class="legend">{{  formTitle }}</legend>
     <div id="idBook" class="hidden">
       <label for="bookId" class="hidden">ID:</label>
       <input type="text" v-model="book.id" readonly /><br />
@@ -88,7 +152,7 @@ export default {
       <span class="error"></span>
     </div>
 
-    <button type="submit">Añadir</button>
+    <button type="submit">{{ formButtonTitle }}</button>
     <button type="reset">Reset</button>
   </form>
 </template>
