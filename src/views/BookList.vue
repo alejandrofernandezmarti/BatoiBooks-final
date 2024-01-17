@@ -5,11 +5,11 @@
       <button  v-if="!isBookInCart(book.id)" class="add"  @click="adddBook(book)">
       <span class="material-icons">add_shopping_cart</span>
       </button>
-      
+
       <button class="edit"  @click="$router.push('/edit/' + book.id)">
         <span class="material-icons">edit</span>
       </button>
-      <button class="delete"  @click="delBook(book.id)">
+      <button class="delete"  @click="delBook(book)">
         <span class="material-icons">delete</span>
       </button>
     </book-item>
@@ -45,16 +45,19 @@ export default {
   methods: {
     ...mapActions(messagesStore,["addBook",'isBookInCart']),
 
-    async delBook(id) {
-      await BooksRepository.removeBook(id)
-      let ind = this.books.findIndex(Book => Book.id === id);
-      if (ind >= 0){
-        this.books.splice(ind,1);
-        this.addMessage('El libro con id '+id+'  ha sido eliminado')
-      }else {
-        throw new Error("No se ha encontrado el id");
+    async delBook(book) {
+      if(confirm("Quieres borrar el libro con id " +book.id + " y codigo "+ book.idModule)){
+        await BooksRepository.removeBook(book.id)
+        let ind = this.books.findIndex(Book => Book.id === book.id);
+        if (ind >= 0){
+          this.books.splice(ind,1);
+          this.addMessage('El libro con id '+book.id+'  ha sido eliminado')
+        }else {
+          throw new Error("No se ha encontrado el id");
+        }
+        return {};
       }
-      return {};
+
     },
     adddBook(book){
       this.addBook('El libro con id '+book.id+'  ha sido añadido al carrito',book)
