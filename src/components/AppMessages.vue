@@ -1,16 +1,15 @@
 <script >
-  import {store} from "@/store/index.js";
+import {messagesStore} from "@/stores/messages.js";
+import {mapActions, mapState} from "pinia";
 
   export default {
     computed: {
-      messages() {
-        return store.state.messages
-      }
+      ...mapState(messagesStore,{messages: 'messages'}),
+
     },
     methods: {
-      delMessage(index) {
-        store.delMessage(index)
-      }
+      ...mapActions(messagesStore,['delMessage']),
+
     },
 
   }

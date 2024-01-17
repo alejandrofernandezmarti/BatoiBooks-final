@@ -5,6 +5,8 @@ import BookForm from './views/BookForm.vue'
 import BookList from './views/BookList.vue';
 import AppCart from './views/AppCart.vue';
 import AppMessages from './components/AppMessages.vue';
+import {mapActions, mapState} from "pinia";
+import {messagesStore} from "@/stores/messages.js";
 export default {
   components: {
     AppAbout,
@@ -13,7 +15,16 @@ export default {
     BookList,
     AppCart,
     AppMessages
-  }
+  },
+  mounted() {
+    this.loadModules()
+    this.restartBooks()
+
+  },
+  methods: {
+    ...mapActions(messagesStore, ["loadModules",'restartBooks']),
+  },
+
 }
 </script>
 
@@ -22,7 +33,7 @@ export default {
   <html>
     <head>
       <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta name="viewport"  />
       <title>Título de la página</title>
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
       <link rel="stylesheet" />
@@ -35,12 +46,7 @@ export default {
 
       <div class="content">
         <AppMessages></AppMessages>
-        <book-list></book-list>
-
-        <br>
-        <book-form></book-form>
-        <app-cart></app-cart>
-        <AppAbout></AppAbout>
+        <router-view></router-view>
       </div>
     </body>
   </html>
@@ -49,7 +55,7 @@ export default {
 <style scoped>
 .content {
   padding: 40px;
-  width: 88%; /* Establece un ancho para que no se solape con el menú lateral */
+  width: 87%; /* Establece un ancho para que no se solape con el menú lateral */
   margin-left: 10%;/* Agrega un margen izquierdo para que el contenido no se superponga con el menú */
 }
 body {

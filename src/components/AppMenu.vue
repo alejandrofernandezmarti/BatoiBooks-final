@@ -9,7 +9,8 @@
     <ul>
       <li><router-link to="/">Home</router-link></li>
       <li><RouterLink to="/addBook">Añadir Libro</RouterLink></li>
-      <li><RouterLink to="/about">Añadir Libro</RouterLink></li>
+      <li><RouterLink to="/carrito">Carrito</RouterLink></li>
+      <li><RouterLink to="/about">About</RouterLink></li>
     </ul>
   </nav>
 </template>
@@ -17,7 +18,7 @@
 <style scoped>
 .sidebar {
   /* Establece una posición fija */
-  background-color: #78b5c2;
+  background-color: #9ca7ad;
   color: #fff;
   font-size: 20px;
   text-align: center;

@@ -1,7 +1,8 @@
 <script>
 import ModulesRepository from '../repositories/modules.repository.js'
 import BooksRepository from "../repositories/books.repository.js";
-import {store} from "@/store/index.js";
+import {messagesStore} from "@/stores/messages.js";
+import {mapActions, mapState} from "pinia";
 
 export default {
   props: ['id'],
@@ -9,11 +10,11 @@ export default {
   data() {
     return {
       book: {idModule:''},
-      modules: [],
       repository: new BooksRepository()
     }
   },
   computed:{
+    ...mapState(messagesStore,{modules: 'modules'}),
     editing() {
       return !!this.id
     },
@@ -30,7 +31,6 @@ export default {
   },
 
   async mounted() {
-    await this.loadModules()
 
     if (this.editing) {
       await this.loadBook()
@@ -41,25 +41,19 @@ export default {
 
   },
   methods:{
+    ...mapActions(messagesStore,['addMessage']),
+
     async addBook(){
       const repository = new BooksRepository();
       await repository.addBook(this.book)
       this.book = {}
-    },
-    async loadModules(){
-      const ModuleRepository = new ModulesRepository()
-      try {
-        this.modules = await ModuleRepository.getAllModules()
-      } catch (error) {
-        alert(error)
-      }
     },
 
     async loadBook() {
       try {
         this.book = await this.repository.getBookById(this.id)
       } catch (error) {
-        store.addMessage(error.message)
+        this.addMessage(error.message)
       }
 
     },
@@ -73,7 +67,7 @@ export default {
         this.book = {}
         this.$router.push('/')
       } catch (error) {
-        store.addMessage(error.message)
+        this.addMessage(error.message)
       }
 
     },
@@ -89,7 +83,7 @@ export default {
 
 }
 </script>
-// cambiar id por v-model
+
 <template>
   <form id="bookForm" @submit.prevent="handleSubmit"
         @reset.prevent="handleReset" novalidate>
@@ -192,6 +186,7 @@ button:hover {
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
+
 }
 
 label {
