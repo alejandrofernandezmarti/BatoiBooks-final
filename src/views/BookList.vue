@@ -43,7 +43,7 @@ export default {
     BookItem
   },
   methods: {
-    ...mapActions(messagesStore,["addBook",'isBookInCart']),
+    ...mapActions(messagesStore,["addBook",'isBookInCart','addMessage']),
 
     async delBook(book) {
       if(confirm("Quieres borrar el libro con id " +book.id + " y codigo "+ book.idModule)){

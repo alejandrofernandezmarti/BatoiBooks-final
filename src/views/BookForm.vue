@@ -43,11 +43,6 @@ export default {
   methods:{
     ...mapActions(messagesStore,['addMessage']),
 
-    async addBook(){
-      const repository = new BooksRepository();
-      await repository.addBook(this.book)
-      this.book = {}
-    },
 
     async loadBook() {
       try {
@@ -62,6 +57,7 @@ export default {
         if (this.editing) {
           await this.repository.changeBook(this.book)
         } else {
+          this.book.idUser = 33;
           await this.repository.addBook(this.book)
         }
         this.book = {}
