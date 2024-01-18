@@ -53,6 +53,7 @@ export const messagesStore = defineStore('messagesStore', {
         vaciarCarrito() {
             this.cartBooks = [];
             localStorage.removeItem('cartBooks');
+
         },
         restartBooks(){
             this.cartBooks = JSON.parse(localStorage.getItem('cartBooks')) || []
