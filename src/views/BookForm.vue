@@ -81,12 +81,11 @@ export default {
 </script>
 
 <template>
-  <form id="bookForm" @submit.prevent="handleSubmit"
-        @reset.prevent="handleReset" novalidate>
+  <Form id="bookForm">
     <legend class="legend">{{  formTitle }}</legend>
     <div id="idBook" class="hidden">
       <label for="bookId" class="hidden">ID:</label>
-      <input type="text" v-model="book.id" readonly /><br />
+      <Field type="text" v-model="book.id" readonly  name="bookID"/><br />
       <span class="error"></span>
     </div>
     <div>
@@ -108,30 +107,30 @@ export default {
 
     <div>
       <label for="price">Precio:</label>
-      <input
+      <Field
         type="number"
         v-model="book.price"
         required
         min="0"
         step="0.01"
         pattern="\d+(\.\d{2})?"
-      /><br />
+       name="bookPrice"/><br />
       <span class="error"></span>
     </div>
 
     <div>
       <label for="pages">Páginas:</label>
-      <input type="number" v-model="book.pages" required min="0" /><br />
+      <Field type="number" v-model="book.pages" required min="0"  name="bookPages"/><br />
       <span class="error"></span>
     </div>
 
     <label>Estado:</label>
     <div class="options">
-      <input v-model="book.status" type="radio" id="Nuevo" name="bookStat" value="Nuevo" required />
+      <Field v-model="book.status" type="radio" id="Nuevo" name="bookStat" value="Nuevo" required />
       <label for="Nuevo">Nuevo</label>
-      <input v-model="book.status" type="radio" name="bookStat" id="Usado" value="Usado" />
+      <Field v-model="book.status" type="radio" name="bookStat" id="Usado" value="Usado" />
       <label for="Usado">Usado</label>
-      <input v-model="book.status" type="radio" name="bookStat" id="Roto" value="Roto" />
+      <Field v-model="book.status" type="radio" name="bookStat" id="Roto" value="Roto" />
       <label for="Roto">Roto</label>
       <span class="error"></span>
     </div>
@@ -144,7 +143,7 @@ export default {
 
     <button type="submit">{{ formButtonTitle }}</button>
     <button type="reset">Reset</button>
-  </form>
+  </Form>
 </template>
 
 <style scoped>
