@@ -3,14 +3,14 @@ const SERVER = import.meta.env.VITE_URL_API
 export default class UserRepository {
   constructor() {}
   async getAllUsers() {
-    let response = await fetch(SERVER + '/users')
+    let response = await fetch(SERVER + '/modules')
     if (!response.ok) {
       throw `Error ${response.status} de la BBDD: ${response.statusText}`
     }
     return await response.json()
   }
   async getUserById(id) {
-    let response = await fetch(SERVER + '/users/' + id)
+    let response = await fetch(SERVER + '/modules/' + id)
     if (!response.ok) {
       throw `Error ${response.status} de la BBDD: ${response.statusText}`
     }
@@ -18,7 +18,7 @@ export default class UserRepository {
   }
   async addUser(user) {
     // let sentencia = {"id":user.id,"email": user.email,"nick":user.nick ,"price": user.price, "password": user.password}
-    const response = await fetch(SERVER + '/users', {
+    const response = await fetch(SERVER + '/modules', {
       method: 'POST',
       body: JSON.stringify(user),
       headers: { 'Content-Type': 'application/json' }
@@ -30,7 +30,7 @@ export default class UserRepository {
   }
 
   async removeUser(id) {
-    const response = await fetch(SERVER + '/users/' + id, { method: 'DELETE' })
+    const response = await fetch(SERVER + '/modules/' + id, { method: 'DELETE' })
     if (!response.ok) {
       throw `Error ${response.status} de la BBDD: ${response.statusText}`
     }
@@ -45,7 +45,7 @@ export default class UserRepository {
       price: user.price,
       password: user.password
     }
-    const response = await fetch(SERVER + '/users/' + user.id, {
+    const response = await fetch(SERVER + '/modules/' + user.id, {
       method: 'PUT',
       body: JSON.stringify(sentencia),
       headers: { 'Content-Type': 'application/json' }
@@ -57,7 +57,7 @@ export default class UserRepository {
   }
   async updateUserPassword(id, password) {
     let campos = { password: password }
-    const response = await fetch(SERVER + '/users/' + id, {
+    const response = await fetch(SERVER + '/modules/' + id, {
       method: 'PATCH',
       body: JSON.stringify(campos),
       headers: { 'Content-Type': 'application/json' }

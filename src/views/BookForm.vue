@@ -1,16 +1,25 @@
 <script>
-import ModulesRepository from '../repositories/modules.repository.js'
 import BooksRepository from "../repositories/books.repository.js";
 import {messagesStore} from "@/stores/messages.js";
+import { Form, Field, ErrorMessage } from "vee-validate";
 import {mapActions, mapState} from "pinia";
+import * as yup from 'yup';
 
 export default {
   props: ['id'],
 
   data() {
+    const mySchema = yup.object({
+      publisher: yup.string().required('El campo de Editorial es obligatorio'),
+      bookPrice: yup.number().required('Tienes que indicar un precio para el libro').min(1,'El precio minimo para un libro es 1'),
+      bookPages: yup.number().required('Indica el numero de páginas del libro').min(1,'El libro de tener minimo una página'),
+      bookStat: yup.string().required('Selecciona el estado del libro'),
+      idModule: yup.string().required('Selecciona un módulo para el libro'),
+    })
     return {
       book: {idModule:''},
-      repository: new BooksRepository()
+      repository: new BooksRepository(),
+      mySchema
     }
   },
   computed:{
@@ -43,6 +52,9 @@ export default {
   methods:{
     ...mapActions(messagesStore,['addMessage']),
 
+    onSubmit(values) {
+      console.log(values);
+    },
 
     async loadBook() {
       try {
@@ -52,28 +64,7 @@ export default {
       }
 
     },
-    async handleSubmit() {
-      try {
-        if (this.editing) {
-          await this.repository.changeBook(this.book)
-        } else {
-          this.book.idUser = 33;
-          await this.repository.addBook(this.book)
-        }
-        this.book = {}
-        this.$router.push('/')
-      } catch (error) {
-        this.addMessage(error.message)
-      }
 
-    },
-    handleReset() {
-      if (this.editing) {
-        this.loadBook()
-      } else {
-        this.book = { idModule: '' }
-      }
-    }
 
   }
 
@@ -81,28 +72,28 @@ export default {
 </script>
 
 <template>
-  <Form id="bookForm">
+  <Form id="bookForm" :initial-values="book" @submit="onSubmit" :validation-schema="mySchema">
     <legend class="legend">{{  formTitle }}</legend>
     <div id="idBook" class="hidden">
       <label for="bookId" class="hidden">ID:</label>
       <Field type="text" v-model="book.id" readonly  name="bookID"/><br />
-      <span class="error"></span>
+      <ErrorMessage name="bookID"></ErrorMessage>
     </div>
     <div>
-      <label for="id-module">Módulo:</label>
-      <select v-model="book.idModule" required>
+      <label for="idModule" >Módulo:</label><br>
+      <Field as="select" name="idModule" v-model="book.idModule" required>
         <option value="">- Selecciona un módulo -</option>
         <option v-for="module in modules" :key="module.code" :value="module.code">
           {{ module.cliteral }}
         </option>
-      </select>
-      <span class="error"></span><br />
+      </Field><br>
+      <ErrorMessage class="error" name="idModule"></ErrorMessage><br /><br>
     </div>
 
     <div>
       <label for="publisher">Editorial:</label>
-      <input type="text" v-model="book.publisher" required /><br />
-      <span class="error"></span>
+      <Field type="text" v-model="book.publisher" required  name="publisher"/><br />
+      <ErrorMessage name="publisher"></ErrorMessage><br>
     </div>
 
     <div>
@@ -115,13 +106,13 @@ export default {
         step="0.01"
         pattern="\d+(\.\d{2})?"
        name="bookPrice"/><br />
-      <span class="error"></span>
+      <ErrorMessage name="bookPrice"></ErrorMessage><br>
     </div>
 
     <div>
       <label for="pages">Páginas:</label>
       <Field type="number" v-model="book.pages" required min="0"  name="bookPages"/><br />
-      <span class="error"></span>
+      <ErrorMessage name="bookPages"></ErrorMessage><br>
     </div>
 
     <label>Estado:</label>
@@ -132,7 +123,7 @@ export default {
       <label for="Usado">Usado</label>
       <Field v-model="book.status" type="radio" name="bookStat" id="Roto" value="Roto" />
       <label for="Roto">Roto</label>
-      <span class="error"></span>
+      <ErrorMessage name="bookStat"></ErrorMessage>
     </div>
 
     <div>
