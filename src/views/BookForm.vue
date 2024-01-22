@@ -11,9 +11,9 @@ export default {
   data() {
     const mySchema = yup.object({
       publisher: yup.string().required('El campo de Editorial es obligatorio'),
-      bookPrice: yup.number().required('Tienes que indicar un precio para el libro').min(1,'El precio minimo para un libro es 1'),
-      bookPages: yup.number().required('Indica el numero de páginas del libro').min(1,'El libro de tener minimo una página'),
-      bookStat: yup.string().required('Selecciona el estado del libro'),
+      price: yup.number().required('Tienes que indicar un precio para el libro').min(1,'El precio minimo para un libro es 1'),
+      pages: yup.number().required('Indica el numero de páginas del libro').min(1,'El libro de tener minimo una página'),
+      status: yup.string().required('Selecciona el estado del libro'),
       idModule: yup.string().required('Selecciona un módulo para el libro'),
     })
     return {
@@ -52,8 +52,17 @@ export default {
   methods:{
     ...mapActions(messagesStore,['addMessage']),
 
-    onSubmit(values) {
-      console.log(values);
+    async onSubmit(values) {
+      try {
+        if (this.editing) {
+          await this.repository.changeBook(values)
+        } else {
+          await this.repository.addBook(values)
+        }
+        this.$router.push('/')
+      } catch (error) {
+        this.addMessage(error.message)
+      }
     },
 
     async loadBook() {
@@ -76,7 +85,7 @@ export default {
     <legend class="legend">{{  formTitle }}</legend>
     <div id="idBook" class="hidden">
       <label for="bookId" class="hidden">ID:</label>
-      <Field type="text" v-model="book.id" readonly  name="bookID"/><br />
+      <Field type="text" v-model="book.id" readonly  name="id"/><br />
       <ErrorMessage name="bookID"></ErrorMessage>
     </div>
     <div>
@@ -105,30 +114,30 @@ export default {
         min="0"
         step="0.01"
         pattern="\d+(\.\d{2})?"
-       name="bookPrice"/><br />
-      <ErrorMessage name="bookPrice"></ErrorMessage><br>
+       name="price"/><br />
+      <ErrorMessage name="price"></ErrorMessage><br>
     </div>
 
     <div>
       <label for="pages">Páginas:</label>
-      <Field type="number" v-model="book.pages" required min="0"  name="bookPages"/><br />
-      <ErrorMessage name="bookPages"></ErrorMessage><br>
+      <Field type="number" v-model="book.pages" required min="0"  name="pages"/><br />
+      <ErrorMessage name="pages"></ErrorMessage><br>
     </div>
 
     <label>Estado:</label>
     <div class="options">
-      <Field v-model="book.status" type="radio" id="Nuevo" name="bookStat" value="Nuevo" required />
+      <Field v-model="book.status" type="radio" id="Nuevo" name="status" value="Nuevo" required />
       <label for="Nuevo">Nuevo</label>
-      <Field v-model="book.status" type="radio" name="bookStat" id="Usado" value="Usado" />
+      <Field v-model="book.status" type="radio" name="status" id="Usado" value="Usado" />
       <label for="Usado">Usado</label>
-      <Field v-model="book.status" type="radio" name="bookStat" id="Roto" value="Roto" />
+      <Field v-model="book.status" type="radio" name="status" id="Roto" value="Roto" />
       <label for="Roto">Roto</label>
-      <ErrorMessage name="bookStat"></ErrorMessage>
+      <ErrorMessage name="status"></ErrorMessage>
     </div>
 
     <div>
       <label for="comments">Comentarios:</label>
-      <textarea v-model="book.comments" id="comments"></textarea>
+      <Field v-model="book.comments" id="comments" type="text" name="comments"></Field>
       <span class="error"></span>
     </div>
 
